@@ -1,0 +1,6 @@
+$$ sudo adduser user1 --disabled-password
+$$ sudo su - user1
+$$ mkdir .ssh
+$$ chmod 700 .ssh
+$$ cd .ssh/
+$$ vi authorized_keys
