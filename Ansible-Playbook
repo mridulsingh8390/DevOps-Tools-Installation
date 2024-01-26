@@ -1,0 +1,27 @@
+- name: Demo Playbook
+  hosts: app
+  tasks:
+    - copy:
+        src: /root/file999
+        dest: /root/
+        owner: root
+        group: root
+        mode: 644
+    - file:
+        path: /root/file888
+        state: touch
+        owner: root
+        group: root
+        mode: 644
+    - file:
+       path: /root/dir888
+       state: directory
+       owner: root
+       group: root
+       mode: 644
+    - package:
+       name: apache2
+       state: latest
+    - service:
+        name: apache2
+        state: restarted
