@@ -1,0 +1,70 @@
+
+sudo apt update
+apt install openjdk-11-jdk -y
+sudo apt install default-jdk -y
+java -version
+wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+sudo apt update
+sudo apt install postgresql-13 -y 
+systemctl is-enabled postgresql
+systemctl status postgresql
+sudo -u postgres psql
+CREATE USER sonarqube WITH PASSWORD 'Password';
+CREATE DATABASE sonarqube OWNER sonarqube;
+GRANT ALL PRIVILEGES ON DATABASE sonarqube TO sonarqube;
+\l
+\du
+\q
+sudo useradd -b /opt/sonarqube -s /bin/bash sonarqube
+
+vi /etc/sysctl.conf
+vm.max_map_count=524288
+fs.file-max=131072
+
+sudo sysctl --system
+
+vi /etc/security/limits.d/99-sonarqube.conf
+sonarqube   -   nofile   131072
+sonarqube   -   nproc    8192
+
+sudo apt install unzip software-properties-common wget -y
+wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.6.1.59531.zip
+unzip sonarqube-9.6.1.59531.zip
+mv sonarqube-9.9.3.79811 /opt/sonarqube
+sudo chown -R sonarqube:sonarqube /opt/sonarqube
+vi /opt/sonarqube/conf/sonar.properties
+sonar.jdbc.username=sonarqube
+sonar.jdbc.password=Password
+
+sonar.jdbc.url=jdbc:postgresql://localhost:5432/sonarqube
+unconmment sonar.search.javaOpts=-Xmx512m -Xms512m -XX:MaxDirectMemorySize=256m -XX:+HeapDumpOnOutOfMemoryError
+sonar.web.host=127.0.0.1
+sonar.web.port=9000
+sonar.web.javaAdditionalOpts=-server
+
+sonar.log.level=INFO
+sonar.path.logs=logs
+
+vi /etc/systemd/system/sonarqube.service
+[Unit]
+Description=SonarQube service
+After=syslog.target network.target
+
+[Service]
+Type=forking
+ExecStart=/opt/sonarqube/bin/linux-x86-64/sonar.sh start
+ExecStop=/opt/sonarqube/bin/linux-x86-64/sonar.sh stop
+User=sonarqube
+Group=sonarqube
+Restart=always
+LimitNOFILE=65536
+LimitNPROC=4096
+
+[Install]
+WantedBy=multi-user.target
+
+sudo systemctl daemon-reload
+sudo systemctl start sonarqube.service
+sudo systemctl enable sonarqube.service
+sudo systemctl status sonarqube.service
