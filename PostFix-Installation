@@ -67,3 +67,15 @@ netstat -tulpn | grep :25
 echo "This is the email body." | mail -s "Email subject" user@domain.com
 tailf /var/log/maillog
 
+========================================================================
+
+References:
+-----------
+
+https://oracle-base.com/articles/linux/configure-postfix-as-an-email-relay-on-oracle-linux-servers
+https://docs.oracle.com/en-us/iaas/Content/Email/Reference/postfix.htm
+https://docs.oracle.com/en/learn/oracle-linux-postfix-starttls/#generate-a-tls-certificate
+https://docs.oracle.com/en/learn/oracle-linux-postfix/#configure-postfix
+https://phoenixnap.com/kb/postfix-smtp
+
+
