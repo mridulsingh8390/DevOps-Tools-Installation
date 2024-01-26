@@ -1,0 +1,7 @@
+sudo apt update  -y
+sudo apt install software-properties-common
+sudo apt-add-repository ppa:ansible/ansible
+sudo apt install python -y 
+sudo apt install python3 -y 
+sudo apt update -y
+sudo apt install ansible -y
