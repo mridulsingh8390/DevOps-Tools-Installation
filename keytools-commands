@@ -1,0 +1,8 @@
+keytool tools:
+--------------
+
+keytool -v -list -keytool /webdata/java/jre/lib/security/cacerts -storepass changeit 
+keytool -list -keystore /webdata/java/jre/lib/security/cacerts -alias domainname -storepass -changeit
+
+keytool -importcert -truecacerts -alias dbsqa24 -file /webdata/certificate/pem-24/domain.pem --keystore /webdata/java/jre/lib/security/cacerts -storepass changeit
+keytool -importcert -truecacerts -alias dbsqa24 -file /webdata/certificate/pem-24/domain-chain.pem --keystore /webdata/java/jre/lib/security/cacerts -storepass changeit
