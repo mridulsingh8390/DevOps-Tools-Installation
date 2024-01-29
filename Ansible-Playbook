@@ -63,3 +63,27 @@ vi variable.yaml
    - file:
       path: "{{ mydir }}"
       state: directory
+
+#############################
+
+
+- hosts: all
+  vars:
+    mydir: /tmp/dir101
+    myfile: /etc/passwd
+	mypkg: 
+	   - httpd
+	   - nfs-utils
+	   - tree 
+	   - samba
+	   - ntpd
+  tasks:
+   - file:
+      path: "{{ mydir }}"
+      state: directory
+   - copy:
+      src: "{{ myfile }}"
+      dest: "{{ mydir }}"
+	- package:
+	   name: "{{ mypkg }}"
+	   state: latest
