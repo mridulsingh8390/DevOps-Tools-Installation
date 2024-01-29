@@ -25,3 +25,41 @@
     - service:
         name: apache2
         state: restarted
+
+#################################
+
+
+import_tasks:
+=============
+
+vi play1.yaml
+- name: Demo Playbook
+  hosts: app
+  tasks:
+    - import_tasks: task.yaml
+
+vi task.yaml
+- name: Copy command
+  copy:
+    src: /etc/passwd
+    dest: /tmp
+    owner: root
+    group: root
+    mode: 777
+
+
+########################
+
+Ansible-Varible:
+================
+
+vi variable.yaml
+
+- hosts: all
+  vars:
+    mydir: /tmp/dir101
+    myfile: /etc/passwd
+  tasks:
+   - file:
+      path: "{{ mydir }}"
+      state: directory
