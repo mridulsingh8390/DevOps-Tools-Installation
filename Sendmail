@@ -17,5 +17,8 @@ From: lmp@xyz.com
 Subject: Email subject
 This is the email body.
 
+tailf /var/log/maillog
+
+
 Note: Take a backup of /etc/services file. and change SMTP port from 25 to 587 for TCP and UDP and restart services.
 
