@@ -1,0 +1,21 @@
+yum install procmail mailx sendmail sendmail-cf -y 
+cd /etc/mail
+
+vi /etc/mail/authinfo
+AuthInfo:smtp.domain.com "U:email_id" "P:password" "M:PLAIN"
+
+vi /etc/mail/sendmail.mc
+define(`SMART_HOST', `smtp.zoho.com')
+FEATURE(`authinfo')
+cd /etc/mail/
+m4 sendmail.mc >sendmail.cf
+makemap hash authinfo < authinfo
+systemctl restart sendmail 
+
+sendmail abc@xyz.com 
+From: lmp@xyz.com
+Subject: Email subject
+This is the email body.
+
+Note: Take a backup of /etc/services file. and change SMTP port from 25 to 587 for TCP and UDP and restart services.
+
