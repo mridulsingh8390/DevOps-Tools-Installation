@@ -1,0 +1,54 @@
+Docker Swarm
+
+Create 3 VM on AWS
+Install docker on all 3 Servers.
+		
+yum install docker -y 	
+
+Login to Master and run below command
+	
+docker swarm init --advertise-addr <IP_Address_Of Master> 
+		
+	Join swarm cluster.
+	Run join command on all worker nodes
+	
+	List down node count
+		docker node ls
+	
+	Docker swarm join-token worker
+		docker swarm join-token worker
+		
+	Create swarm service
+		docker service create --name myservice -p 8000:80 nginx
+		
+	List down service
+		docker service ls
+	Scale up the service
+		docker service scale myservice2=15	
+		
+	Check running containers
+		docker ps
+
+	Scale down the service.
+		docker service scale myservice=10
+		docker ps
+
+
+	 Drain any host from swarm cluster
+		docker node update --availability drain <hostname>
+		
+	Add nodes on swarm cluster	
+		docker node update --availability active <hostname>
+
+	Promote and Demote Worker node as swarm master
+	Promote
+		docker node promote <hostname>
+		
+	Demote
+		docker node demote <hostname>
+
+	 Logs	
+		Docker service logs myservice2
+
+	Remove node
+		docker node rm <hostname>
