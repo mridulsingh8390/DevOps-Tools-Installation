@@ -1,1 +1,25 @@
 
+https://kubernetes.io/docs/reference/networking/ports-and-protocols/
+https://docs.kublr.com/installation/hardware-recommendation/
+
+
+sudo apt-get update
+sudo apt-get install docker.io -y
+sudo apt update
+sudo apt upgrade -y
+sudo apt install -y curl apt-transport-https ca-certificates software-properties-common
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+sudo add-apt-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main" 
+#sudo swapoff -a	
+sudo apt update
+sudo apt install -y kubelet kubeadm kubectl
+
+kubeadm init
+
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
+
+kubectl get nodes
