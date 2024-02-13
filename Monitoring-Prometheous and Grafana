@@ -337,3 +337,8 @@ systemctl enable node_exporter.service
 sudo systemctl status node_exporter
 
 http://<node_exporter-ip>:9200/metrics
+
+
+
+1860
+10180
