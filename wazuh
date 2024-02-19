@@ -23,6 +23,8 @@ Step 2 - Install Java:
 sudo amazon-linux-extras install java-openjdk11 -y 
 yum install java-11-openjdk-devel -y
 
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-11.0.22.0.7-1.el7_9.x86_64
+export PATH=$JAVA_HOME/bin:$PATH
 
 Step 3 - Install Wazuh Server:
 ===================
