@@ -1,0 +1,162 @@
+Wazuh Installation on Ubuntu 22.04:
+----------------------------------------
+
+
+https://computingforgeeks.com/how-to-install-wazuh-server-on-ubuntu/
+sudo apt update
+sudo apt install vim curl apt-transport-https unzip wget libcap2-bin software-properties-common lsb-release gnupg2
+curl -sO https://packages.wazuh.com/4.3/wazuh-install.sh
+sudo bash ./wazuh-install.sh -a
+
+
+
+
+
+Wazuh Installation on Centos and AWS AMI2:
+--------------------------------------------------
+
+Step 1 - Create VM on AWS account
+
+
+Step 2 - Install Java:
+----------------------
+sudo amazon-linux-extras install java-openjdk11 -y 
+yum install java-11-openjdk-devel -y
+
+
+Step 3 - Install Wazuh Server:
+===================
+
+rpm --import https://packages.wazuh.com/key/GPG-KEY-WAZUH
+
+vi /etc/yum.repos.d/wazuh.repo
+
+[wazuh]
+gpgcheck=1
+gpgkey=https://packages.wazuh.com/key/GPG-KEY-WAZUH
+enabled=1
+name=EL-Wazuh
+baseurl=https://packages.wazuh.com/4.x/yum/
+protect=1
+
+
+yum install wazuh-manager -y
+yum install  wazuh-manager-4.1.5 -y
+
+systemctl enable --now wazuh-manager
+
+
+Step 4 - Install Elasticsearch and Kibana:
+==========================
+
+
+rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+vi /etc/yum.repos.d/elasticsearch.repo
+
+[elasticsearch-7.x]
+name=Elasticsearch repository for 7.x packages
+baseurl=https://artifacts.elastic.co/packages/7.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md
+
+
+yum install elasticsearch-7.11.2 kibana-7.11.2 -y
+sudo systemctl daemon-reload
+sudo systemctl enable elasticsearch.service
+systemctl start elasticsearch.service
+systemctl enable elasticsearch.service --now
+
+
+vi  /etc/kibana/kibana.yml
+server.port: 5601
+server.host: "0.0.0.0"
+
+
+Step 5 - Install and Configure Filebeat:
+=========================
+
+
+yum  install filebeat-7.11.2 -y
+mv /etc/filebeat/filebeat.yml{,.bak}
+curl -so /etc/filebeat/filebeat.yml https://raw.githubusercontent.com/wazuh/wazuh/v4.0.3/extensions/filebeat/7.x/filebeat.yml
+
+vi /etc/filebeat/filebeat.yml
+#output.elasticsearch.hosts: ['http://YOUR_ELASTIC_SERVER_IP:9200']
+output.elasticsearch.hosts: ['http://localhost:9200']
+
+filebeat test output
+
+
+Step 6 - Install Filebeat Wazuh Module:
+=========================
+
+wget https://packages.wazuh.com/4.x/filebeat/wazuh-filebeat-0.1.tar.gz
+mkdir /usr/share/filebeat/module/wazuh 
+tar xzf wazuh-filebeat-0.1.tar.gz -C /usr/share/filebeat/module/wazuh/ --strip-components=1
+
+curl -so /etc/filebeat/wazuh-template.json https://raw.githubusercontent.com/wazuh/wazuh/4.1/extensions/elasticsearch/7.x/wazuh-template.json
+
+filebeat setup --path.config /etc/filebeat --path.home /usr/share/filebeat --path.data /var/lib/filebeat --index-management -E setup.template.json.enabled=false
+
+systemctl restart filebeat
+
+
+Step 7 - Install Wazuh Plugin for Kibana:
+==========================
+
+mkdir /usr/share/kibana/data
+chown -R kibana: /usr/share/kibana/
+
+cd /usr/share/kibana
+sudo -u kibana /usr/share/kibana/bin/kibana-plugin install https://packages.wazuh.com/4.x/ui/kibana/wazuh_kibana-4.1.5_7.11.2-1.zip
+
+sudo -u kibana /usr/share/kibana/bin/kibana-plugin list
+
+systemctl restart kibana
+systemctl restart elasticsearch
+systemctl restart wazuh-manager
+
+
+Step 8 - Access Kibana Dashboard: 
+======================
+
+URL http://server-IP:5601
+
+
+=============================
+
+https://packages.wazuh.com/4.x/windows/wazuh-agent-4.1.5-1.msi
+
+
+
+
+
+
+
+Install Wazuh Agent on Ubuntu Server:
+=========================
+
+apt install curl -y
+curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | apt-key add -
+
+echo "deb https://packages.wazuh.com/4.x/apt/ stable main" | tee -a /etc/apt/sources.list.d/wazuh.list
+apt update -y 
+apt install wazuh-agent -y
+
+and then add Wazuh Manager ip in below config file
+
+vi /var/ossec/etc/ossec.conf
+
+Resart Wazuh agent service
+
+systemctl restart wazuh-agent.service
+
+/var/ossec/bin/manage_agents
+/var/ossec/bin/manage_agents
+
+
+ bash wazuh-passwords-tool.sh -u admin -p AdminW@zuh@2023#*
