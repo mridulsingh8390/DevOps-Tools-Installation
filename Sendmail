@@ -23,3 +23,5 @@ tailf /var/log/maillog
 Note: Take a backup of /etc/services file. and change SMTP port from 25 to 587 for TCP and UDP and restart services.
 
 yum install -y postfix mailx cyrus-sasl cyrus-sasl-plain
+
+systemctl restart sendmail
