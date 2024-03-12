@@ -1,0 +1,40 @@
+    1  yum update -y
+    2  systemctl start httpd --now
+    3  systemctl start httpd
+    4  systemctl httpd start
+    5  systemctl start httpd
+    6  yum install httpd  -y
+    7  systemctl start httpd
+    8  systemctl start httpd --now
+    9  systemctl enable httpd
+   10  php -v
+   11  php -version
+   12  yum install php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo  -y
+   13  php -v
+   14  rpm -qa | grep php gives:
+   15  rpm -qa | grep php gives
+   16  sqlite3
+   17  yum install PHP SQlite PDO
+   18  yum install PHP* SQlite* PDO*
+   19  yum install php-posix php-mbstring php5-gd php5-json php5-sqlite php-pdo -y
+   20  wget https://github.com/sivann/itdb/archive/1.23.zip
+   21  ls
+   22  unzip 1.23.zip
+   23  ls
+   24  mv itdb-1.23 itdb
+   25  s
+   26  ls
+   27  cd itdb/
+   28  ls
+   29  cd data/
+   30  ls
+   31  mv pure.db itdb.db
+   32  ls
+   33  cd
+   34  ls
+   35  cp -r itdb /var/www/html/
+   36  systemctl restart httpd
+   37  chown -R apache. /var/www/html/
+   38  ll /var/www/html/
+   39  chown -R apache. /var/www/html/
+   40  systemctl restart httpd
