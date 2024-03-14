@@ -1,0 +1,8 @@
+#! /bin/bash
+CUR_DATE=`date +%Y%m%d`
+tar --exclude=log -cvzf /u01/MiddlewareBkp/admin0$CUR_DATE.tgz /webdata/Oracle/admin/*
+
+
+#! /bin/bash
+CUR_DATE=`date +%Y%m%d`
+tar  -cvzf /u01/MiddlewareBkp/Middleware0$CUR_DATE.tgz /webdata/Oracle/Middleware/*
