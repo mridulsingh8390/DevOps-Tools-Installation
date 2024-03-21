@@ -1,0 +1,6 @@
+cd /webdata/Oracle/Middleware/oracle_common/common/bin
+./wlst.sh
+domain = "/webdata/Oracle/admin/domain/aserver/domain"
+service = weblogic.security.internal.SerializedSystemIni.getEncryptionService(domain)  
+encryption = weblogic.security.internal.encryption.ClearOrEncryptedService(service)
+print encryption.decrypt("{AES}sdfsfwerfsdfsdfsdgsdg")
