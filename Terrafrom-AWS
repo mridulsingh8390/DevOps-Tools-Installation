@@ -1,0 +1,136 @@
+## Cloud Provider
+provider "aws" {
+  region     = "us-east-1"
+  access_key = ""
+  secret_key = ""
+}
+
+## Custom VPC
+
+resource "aws_vpc" "DevOps-VPC" {
+  cidr_block       = "10.0.0.0/16"
+  instance_tenancy = "default"
+
+  tags = {
+    Name = "DevOps-VPC"
+  }
+}
+
+## Custom Subnet
+
+resource "aws_subnet" "Public-Subnet" {
+  vpc_id     = aws_vpc.DevOps-VPC.id
+  cidr_block = "10.0.0.0/24"
+
+  tags = {
+    Name = "Public-Subnet"
+  }
+}
+
+
+## Secrurity Group
+
+
+resource "aws_security_group" "DevOps-SG" {
+  name        = "DevOps-SG"
+  description = "Allow TLS inbound traffic"
+  vpc_id      = aws_vpc.DevOps-VPC.id
+
+  ingress {
+    description      = "TLS from VPC"
+    from_port        = 0
+    to_port          = 0
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+
+  }
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
+  tags = {
+    Name = "DevOps-SG"
+  }
+}
+
+## IGW
+
+
+resource "aws_internet_gateway" "DevOps-IGW" {
+  vpc_id = aws_vpc.DevOps-VPC.id
+
+  tags = {
+    Name = "DevOps-IGW"
+  }
+}
+
+## RT
+
+
+resource "aws_route_table" "Public-RT" {
+  vpc_id = aws_vpc.DevOps-VPC.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.DevOps-IGW.id
+  }
+  tags = {
+    Name = "DevOps-RT"
+  }
+}
+
+
+## Association of RT
+
+resource "aws_route_table_association" "Public-Association" {
+  subnet_id      = aws_subnet.Public-Subnet.id
+  route_table_id = aws_route_table.Public-RT.id
+}
+
+## Key-Pair
+
+resource "aws_key_pair" "dev-key" {
+  key_name   = "dev-key"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDO3RdgNXwriiBW9rhqlvaN65arNxnnTwb73/dEVWGpzX4L8lZaAoGDxADd9Z/CMyHYENOylh2pFf9k5D2O7b/pwmOXE23Tf14VzY3st7EDDA3/zgKB8QTCKHBR5Wzqyb2RhsC0zH280PJsxmlZTDxtY+5xJQ1qRoSfChLJtKkU7LRBYkaUZ5Dx7CZjGyopKiL87yjkvTcyvAv2Id5tyMvf0YmTPv/KgK59D0jzYFBRjMlCdDHukip3SUNmI1qwv5WQstE0JOlJNRBcQoN6WaBMlsW7pVI8QMNQzBMkpGk6NPv27GnJ40ly9+ftnDBDvHFpsGkDLNjzMWaUDGy+aLtp root@manoj.com"
+
+}
+
+## EC2
+
+resource "aws_instance" "DevOps-Hangout" {
+  ami           = "ami-0c02fb55956c7d316"
+  instance_type = "t2.micro"
+  subnet_id     =       aws_subnet.Public-Subnet.id
+  vpc_security_group_ids =  ["aws_security_group.DevOps-SG.id"]
+  key_name      = "devops"
+
+  tags = {
+    Name = "DevOps-Hangout"
+  }
+}
+
+resource "aws_eip" "lb" {
+  instance = aws_instance.DevOps-Hangout.id
+  vpc      = true
+}
+
+
+
+
+terraform apply -auto-approve
+terraform destroy -auto-approve
+terraform destroy -target <resource_name>
+
+--------------------------------------------
+
+Terraform State:
+-----------------
+
+terraform state
+terraform state list
+terraform show <specific_resource_name>
