@@ -42,3 +42,14 @@ sudo systemctl restart postgresql
 
 
 =======================
+
+
+Export Script:
+pg_dump --file "/data/postgresql/13/main/backup/abc_20211014_v1.tar" --host localhost --port "5432" --username abc --verbose --format=t --blobs --dbname="abcdb"
+
+Import script
+pg_restore --host localhost --port 5432 --username "abc" --dbname "abcdb" --verbose "/data/postgresql/13/main/backup/abc_20210701_v1.tar"
+
+
+
+===========================
