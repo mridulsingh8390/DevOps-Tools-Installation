@@ -1,0 +1,11 @@
+################# Check logs per min ###############
+
+awk -v dt="11/Apr/2024" '
+$0 ~ dt && gsub(/^[^:]+:|:[0-9]+$/, "", $4) { ++fq[$4] }
+END {
+   PROCINFO["sorted_in"]="@ind_str_asc"
+   for (i in fq)
+      print i, fq[i]
+}' ssl_access_log
+
+===================================================
