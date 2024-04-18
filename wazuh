@@ -158,6 +158,9 @@ Resart Wazuh agent service
 systemctl restart wazuh-agent.service
 
 /var/ossec/bin/manage_agents
+
+
+/var/ossec/bin/agent_groups -a -i 002 -g groupname
 /var/ossec/bin/manage_agents
 
 
