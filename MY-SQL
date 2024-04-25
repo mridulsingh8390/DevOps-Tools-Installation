@@ -1,0 +1,10 @@
+
+
+
+===============================
+create database wpdwptest;
+show databases;
+
+CREATE USER 'wpdwptestuser'@'localhost' IDENTIFIED BY 'pB@123';
+GRANT ALL PRIVILEGES ON wpdwptest.* TO 'wpdwptestuser'@'localhost';
+FLUSH PRIVILEGES;
